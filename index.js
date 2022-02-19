@@ -4,23 +4,29 @@ let diceUp = [];
 let diceRight = [];
 let sumOfDiceWay = 0;
 
+matheOhneGrenzenTest()
+
 function simulateDiceWay(diceWayIndex) {
   if (diceWay[diceWayIndex] == "UP") {
     sumOfDiceWay += diceUp[diceWayIndex];
     diceUp[diceWayIndex + 1] = otherSideOfDice(diceNow[diceWayIndex]);
     diceNow[diceWayIndex + 1] = diceUp[diceWayIndex];
+    diceRight[diceWayIndex + 1] = diceRight[diceWayIndex];
   } else if (diceWay[diceWayIndex] == "RIGHT") {
     sumOfDiceWay += diceRight[diceWayIndex];
     diceRight[diceWayIndex + 1] = otherSideOfDice(diceNow[diceWayIndex]);
     diceNow[diceWayIndex + 1] = diceRight[diceWayIndex];
+    diceUp[diceWayIndex + 1] = diceUp[diceWayIndex];
   } else if (diceWay[diceWayIndex] == "DOWN") {
     sumOfDiceWay += otherSideOfDice(diceUp[diceWayIndex]);
     diceUp[diceWayIndex + 1] = diceNow[diceWayIndex];
     diceNow[diceWayIndex + 1] = otherSideOfDice(diceUp[diceWayIndex]);
+    diceRight[diceWayIndex + 1] = diceRight[diceWayIndex];
   } else if (diceWay[diceWayIndex] == "LEFT") {
     sumOfDiceWay += otherSideOfDice(diceRight[diceWayIndex]);
     diceRight[diceWayIndex + 1] = diceNow[diceWayIndex];
     diceNow[diceWayIndex + 1] = otherSideOfDice(diceRight[diceWayIndex]);
+    diceUp[diceWayIndex + 1] = diceUp[diceWayIndex];
   } else {
     console.error("Invalid value in diceWay: " + diceWay[diceWayIndex]);
   }
@@ -53,9 +59,7 @@ function matheOhneGrenzenTest() {
       }
     }
   }
-  for (let i = 0; i < 6; i++) {
 
-  }
 }
 
 function outputAll() {
