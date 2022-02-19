@@ -1,122 +1,37 @@
-let diceUp = [false, false, false, false, false, false];
-let sum;
-let max = 0;
-let min = 1000;
+let diceWay = ["UP","UP","UP","UP","UP","UP"]
+let diceNow = [4];
+let diceUp = [5];
+let diceRight = [1];
+let sumOfDiceWay = diceNow[0];
 
-function matheOhneGrenzen() {
-  for (let i1 = 0; i1 < 2 ** diceUp.length; i1++) {
-    diceCalc(4, 1, 5);
-    if (max <= sum && inField()) {
-      maxOutput(i1);
-    }
-    if (min >= sum && inField()) {
-      minOutput(i1);
-    }
-    for (let i = 0; i < diceUp.length; i++) {
-      if (!diceUp[i]) {
-        diceUp[i] = true;
-        break;
-      } else {
-        diceUp[i] = false;
-      }
-    }
-  }
-}
-
-/**
- * Berechnet die Summe der Augenzahlen, die auf dem Weg des Würfels 
- * @param {number} x - Die Würfelseite, auf der der Würfel liegt
- * @param {number} y - Die Würfelseite, die nach oben zeigt
- * @param {number} z - Die Würfelseite, die nach rechts zeigt
- */
-function diceCalc(x, y, z) {
-  /*
-    x ist die würfelseite, auf der der würfel ist
-    y ist die würfelseite die nach oben geht
-    z ist die würfelseite die nach rechts geht
-    wenn diceUp == true, dann geht er nach oben
-  */
-
-  sum = x;
-  let temp;
-
-  for (let i = 0; i < diceUp.length; i++) {
-    if (diceUp[i]) {
-      sum += y;
-      temp = y;
-      y = 7 - x;
-      x = temp;
-    } else {
-      temp = z;
-      z = 7 - x;
-      x = temp;
-      sum += z;
-    }
-    console.log(i);
-  }
-}
-
-function diceCalcOut(x, y, z) {
-  /*
-    x ist die würfelseite, auf der der würfel ist
-    y ist die würfelseite die nach oben geht
-    z ist die würfelseite die nach rechts geht
-    wenn diceUp == true, dann geht er nach oben
-  */
-
-  sum = x;
-  let temp;
-  console.log("Bewegung Nr.0: " + x);
-
-  for (let i = 0; i < diceUp.length; i++) {
-    if (diceUp[i]) {
-      console.log("Bewegung Nr." + (i + 1) + ": " + y);
-      sum += y;
-      temp = y;
-      y = 7 - x;
-      x = temp;
-    } else {
-      console.log("Bewegung Nr." + (i + 1) + ": " + z);
-      temp = z;
-      z = 7 - x;
-      x = temp;
-      sum += z;
-    }
-  }
-}
-
-function inField() {
-  let counter = 0;
-  for (let i = 0; i < diceUp.length; i++) {
-    if (diceUp[i]) {
-      counter++;
-    }
-  }
-  if (counter == 3) {
-    return true;
+function simulateDiceWay(diceWayIndex) {
+  if (diceWay[diceWayIndex] == "UP") {
+    sumOfDiceWay += diceUp[diceWayIndex];
+    diceUp[diceWayIndex+1] = otherSideOfDice(diceNow[diceWayIndex]);
+    diceNow[diceWayIndex+1] = diceUp[diceWayIndex];
+  } else if (diceWay[diceWayIndex] == "RIGHT") {
+    sumOfDiceWay += diceRight[diceWayIndex];
+    diceRight[diceWayIndex+1] = otherSideOfDice(diceNow[diceWayIndex]);
+    diceNow[diceWayIndex+1] = diceRight[diceWayIndex];
+  } else if (diceWay[diceWayIndex] == "DOWN") {
+    sumOfDiceWay += otherSideOfDice(diceUp[diceWayIndex]);
+    diceUp[diceWayIndex+1] = diceNow[diceWayIndex];
+    diceNow[diceWayIndex+1] = otherSideOfDice(diceUp[diceWayIndex]);
+  } else if (diceWay[diceWayIndex] == "LEFT") {
+    sumOfDiceWay += otherSideOfDice(diceRight[diceWayIndex]);
+    diceRight[diceWayIndex+1] = diceNow[diceWayIndex];
+    diceNow[diceWayIndex+1] = otherSideOfDice(diceRight[diceWayIndex]);
   } else {
-    return false;
+    console.error("Invalid value in diceWay: "+diceWay[diceWayIndex]);
   }
 }
 
-function minOutput(i1) {
-  console.log("MINIMUM");
-  console.log("Runde: " + i1);
-  console.log("Dice: " + diceUp);
-  diceCalcOut(4, 1, 5);
-  console.log("Summe: " + sum);
-  console.log("");
-  min = sum;
+function otherSideOfDice(x){
+  return 7-x;
 }
 
-function maxOutput(i1) {
-  console.log("MAXIMUM");
-  console.log("Runde: " + i1);
-  console.log("Dice: " + diceUp);
-  diceCalcOut(4, 1, 5);
-  console.log("Summe: " + sum);
-  console.log("");
-  max = sum;
+for (let i = 0; i < diceWay.length; i++) {
+  console.log(diceNow[0]+", "+sumOfDiceWay)
+  simulateDiceWay(i);
 }
-
-matheOhneGrenzen();
+console.log(diceNow[0]+", "+sumOfDiceWay)
